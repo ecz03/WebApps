@@ -7,7 +7,7 @@
  *----------------------------------------------------------*/
 const net = require('net');
 const x = ['Canoe!', 'Who!', 'Lettuce', 'Honey bee', 'Wooden shoe', 'A broken pencil', 'Cow says', 'Double', 'Mikey!', 'Atch'];
-const y = ['Canoe come out and play with me today?', 'That\'s what an owl says!', 'Lettuce in, it’s cold out here', 'Honey bee a dear and get me some juice', 'Wooden shoe like to hear another joke?', 'Oh never mind it’s pointless', 'No silly, a cow says Mooooo!', 'W!', 'Mikey doesn’t fit in the keyhole!', 'Bless you!'];
+const y = ['Canoe come out and play with me today?', 'That\'s what an owl says!', 'Lettuce in, it\'s cold out here', 'Honey bee a dear and get me some juice', 'Wooden shoe like to hear another joke?', 'Oh never mind it\'s pointless', 'No silly, a cow says Mooooo!', 'W!', 'Mikey doesn\'t fit in the keyhole!', 'Bless you!'];
 
 net.createServer((socket) => {
     var state = 0;

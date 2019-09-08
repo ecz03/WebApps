@@ -3,7 +3,7 @@
  * Fecha: 30-Ago-2019
  * Autores:
  *           A01372581 Marcos Eduardo Castañeda Guzmán
- *           A01169052 Ernestro Cruz López
+ *           A01169052 Ernesto Cruz López
  *----------------------------------------------------------*/
 const net = require('net');
 const x = ['Canoe!', 'Who!', 'Lettuce', 'Honey bee', 'Wooden shoe', 'A broken pencil', 'Cow says', 'Double', 'Mikey!', 'Atch'];

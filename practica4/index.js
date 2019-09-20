@@ -36,7 +36,7 @@ app.get('/conway/:n', (req, res) => { //Secuencia look and say
     });
     seed = result;
     }
-    res.send('<head><style> \
+    res.send('<!DOCTYPE html><html lang="es"><head><title>Conway Look and Say</title><style> \
     ol {                    \
     margin: 0 0 1.5em;     \
     padding: 0;            \
@@ -59,7 +59,7 @@ app.get('/conway/:n', (req, res) => { //Secuencia look and say
     }</style></head><body><h1 style="background-color:#3256B0; \
     color:white;">Secuencia de Conway n=' + req.params.n + 
     '</h1><ol>' + htmlPart + '</ol><div><hr>2019 por Marcos Castañeda \
-    (A01372581) y Ernesto Cruz(A01169052)</div></body>');
+    (A01372581) y Ernesto Cruz(A01169052)</div></body></html>');
     
 });
 

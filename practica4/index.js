@@ -15,41 +15,51 @@ var userpass = {"usuario":"contrasena", "mark":"12345", "neto":"netuki"};
 
 app.get('/conway/:n', (req, res) => { //Secuencia look and say
     
-    var strConway; //El string final en HTML
-    var strLinea = '1'; //Almacena la última línea
-    var strTemp = '1'; //Se va escribiendo la siguiente línea
-    var contador = 0; //Cuenta de caracteres iguales
-    var caracter; //Caracter actual para contar
-    
-    if (req.params.n < 1){
-        strConway = '';
-    } else {
-        strConway = '1<br>';
-        for (var i = 1; i < req.params.n; i++) {
-            contador = 0;
-            strTemp = '';
-            for (var letra = 0; letra < strLinea.length; letra++) {
-                if (letra > 0){
-                    if (strLinea.charAt(letra) == caracter){
-                        contador++;
-                    } else {
-                        strTemp += contador + caracter;
-                        contador = 1;
-                        caracter = strLinea.charAt(letra);
-                    }
-                } else {
-                    caracter = strLinea.charAt(letra);
-                    contador = 1;
-                }
-            }
-            strTemp += contador + caracter;
-            strLinea = strTemp;
-            strConway += strTemp + '<br>';
+    var seed = 1;
+    var htmlPart= '';
+    for (var i = 0; i < req.params.n; i++) {
+        htmlPart += '<li style=color:gray>'+seed + '</li>';
+        var result = '',
+        chars = (seed + ' ').split(''),
+        lastChar = chars[0],
+        times = 0;
+ 
+    chars.forEach(function(nextChar) {
+        if (nextChar === lastChar) {
+            times++;
         }
+        else {
+            result += (times + '') + lastChar;
+            lastChar = nextChar;
+            times = 1;
+        }
+    });
+    seed = result;
     }
-    
-    
-    res.send('<h1 style="background-color:#3256B0; color:white;">Secuencia de Conway n='+req.params.n+'</h1>' + strConway);
+    res.send('<head><style> \
+    ol {                    \
+    margin: 0 0 1.5em;     \
+    padding: 0;            \
+    counter-reset: item;   \
+    }                        \
+    ol > li {                \
+    margin: 0;             \
+    padding: 0 0 0 2em;    \
+    text-indent: -2em;     \
+    list-style-type: none;  \
+    counter-increment: item;  \
+    }                           \
+    ol > li:before {            \
+    display: inline-block;    \
+    width: 1em;               \
+    padding-right: 0.5em;     \
+    font-weight: bold;        \
+    text-align: right;        \
+    content: counter(item) "."; color:black;\
+    }</style></head><body><h1 style="background-color:#3256B0; \
+    color:white;">Secuencia de Conway n=' + req.params.n + 
+    '</h1><ol>' + htmlPart + '</ol><div><hr>2019 por Marcos Castañeda \
+    (A01372581) y Ernesto Cruz(A01169052)</div></body>');
     
 });
 

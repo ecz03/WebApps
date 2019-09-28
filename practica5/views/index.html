@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Superheroes</title>
+    </head>
+    <body>
+        <table style="width:50%">
+          <tr>
+            <th>Nombre</th>
+            <th>Identidad Secreta</th>
+            <th>Sexo</th>
+          </tr>
+          <%sups.forEach((sup)=>{%>
+          <tr>
+            <td align='center'><%=sup.Nombre%></td>
+            <td align='center'><%=sup.IdentidadSecreta%></td>
+            <td align='center'><%=sup.Sexo%></td>
+          </tr>
+          <%});%>
+        </table>
+    </body>
+</html>

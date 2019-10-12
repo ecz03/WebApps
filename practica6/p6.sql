@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS p6;
+USE p6
+-- COMENTARIO
+CREATE TABLE IF NOT EXISTS lenguajes(
+    nombre VARCHAR(30),
+    anio INT(4),
+    autor VARCHAR(30)
+);

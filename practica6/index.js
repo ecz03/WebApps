@@ -1,4 +1,11 @@
-const express = require('express');
+/*----------------------------------------------------------
+ * Práctica 6: Utilizando MySQL y Express con plantillas EJS
+ * Fecha: 16-Oct-2019
+ * Autores:
+ *           A01372581 Marcos Eduardo Castañeda Guzmán
+ *           A01169052 Ernestro Cruz López
+ *----------------------------------------------------------*/
+ const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
 const app = express();

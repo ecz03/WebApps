@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Marca</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style> a {text-decoration: none}
+                hr{
+                    border: 0;
+                    position: relative;
+                    height: 1px;
+                    margin-bottom: -14px;
+                    overflow: hidden;
+                    background-image: linear-gradient(to right, rgba(0, 191, 255, 0), rgba(0, 191, 255, 0.75), rgba(0, 191, 255, 0));
+                    border-bottom: 1px
+                }
+        </style>
+    </head>
+    <body class = "w3-dark-grey">
+    <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp Tú Marca</h1>
+    <br>
+    <div class="w3-container">
+      <table class="w3-table-all">
+        <thead>
+          <tr class="w3-teal">
+            <th>Marca</th>
+            <th>Establecimiento</th>
+            <th>Origen</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tr class="w3-hover-amber w3-text-black">
+          <td><%=carros["marca"]%></td>
+          <td><%=carros["establecimiento"]%></td>
+          <td><%=carros["origen"]%></td>
+          <td><a href="<%=carros["url"]%>"><%=carros["url"]%></a></td>
+        </tr>
+      </table>
+    </div>
+    
+    <br>
+    
+    <form class="w3-container">
+      <button class="w3-btn  w3-round-xxlarge w3-indigo"><a href='index.html' target="_blank">Regresar al menú principal</a></button>
+    </form>
+    <hr>
+    <p align="center" style="color:rgba(0, 250, 255, 0.35)"><font size='1'>Desarrollo de aplicaciones web</font></p>
+    </body>
+</html> 

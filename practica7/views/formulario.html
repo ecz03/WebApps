@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang='es'>
+    <head>
+        <title>Buscar Marca</title>
+        <meta charset="utf-8">
+        <meta name ="viewport" content ="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style> a {text-decoration: none}
+                hr{
+                    border: 0;
+                    position: relative;
+                    height: 1px;
+                    margin-bottom: -14px;
+                    overflow: hidden;
+                    background-image: linear-gradient(to right, rgba(0, 191, 255, 0), rgba(0, 191, 255, 0.75), rgba(0, 191, 255, 0));
+                    border-bottom: 1px
+                }
+        </style>
+    </head>
+    <body class = "w3-dark-grey">
+        <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp Buscar Marca</h1>
+        <br>
+        <div class="w3-container w3-teal">
+          <p>&nbsp&nbsp&nbsp<b>Instrucciones:</b>&nbsp Ingresa los datos que se piden a continuación.</p>
+        </div>
+        <br>
+        <!--<form class="w3-container" action="/practica7/:marca/Consulta" method="GET" > -->
+          <label class="w3-text-red"><b>Marca:</b></label>
+          <input class="w3-input w3-border w3-light-grey" type="text" id="marca" name="marca" placeholder="Nombre de la marca">
+          <br>
+          <button onClick = "get_marca()" value="Añadir" class="w3-btn  w3-round-xxlarge w3-indigo">Añadir</button>
+        <!--</form>-->
+        <hr>
+        <p align="center" style="color:rgba(0, 250, 255, 0.35)"><font size='1'>Desarrollo de aplicaciones web</font></p>
+        
+        <script type="text/javascript">
+            function get_marca() {
+              var marca = document.getElementById("marca").value;
+              location.href = "/practica7/"+marca+"/Consulta";
+            }
+        </script>
+    </body>
+</html>

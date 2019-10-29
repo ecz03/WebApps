@@ -1,0 +1,59 @@
+//pridcuto en cada una re las rutas
+var bodyParser=require("body-parser"); 
+
+const CarBrand = require("../models/car_brands");
+const path = require("path")
+
+exports.practica7 = (req,res) =>{
+    res.sendFile('index.html',{root:"../practica7/views"});
+};
+
+exports.crearBrand = (req,res) => {
+    res.sendFile('create_brand.html',{root:"../practica7/views"});
+};
+
+exports.registrarBrand = (req,res) => {
+     var car_brand = new CarBrand(
+        {
+            marca:req.body.marca,
+            establecimiento:req.body.establecimiento,
+            origen:req.body.origen,
+            url:req.body.url
+        }
+        );
+        car_brand.save((err)=>{
+            if (err) throw err;
+            //res.send("Producto creado exitosamente")
+            res.send(req.body.marca)
+        });
+}
+
+exports.formularioBrand = (req,res) => {
+   res.sendFile('formulario.html',{root:"../practica7/views"});  
+};
+
+exports.consultarBrand = (req,res) => {
+    CarBrand.findOne({marca:req.params.marca},{"_id":0,"marca":1,"establecimiento":1,"origen":1,"url":1},(err,brand_car)=>{
+        if (err) throw err
+        console.log(brand_car)
+        //res.render("/home/ec2-user/environment/practica7/views/show_brand.html",{carros:brand_car});
+        res.render(path.join(__dirname+'/../views/show_brand.html'),{carros:brand_car});
+    })
+    
+};
+
+exports.actualizarBrand = (req,res) => {
+    var filter = {marca:req.body.marca}
+    var update = {establecimiento:req.body.establecimiento,origen:req.body.origen,url:req.body.url}
+    CarBrand.findOneAndUpdate(filter,update,{new:true},(err,producto)=>{
+        if (err) throw err
+        res.send('Producto Actualizado')
+    })
+};
+
+exports.eliminarBrand = (req,res) => {
+  CarBrand.findOneAndRemove({marca:req.body.marca},(err)=>{
+      if (err) throw err;
+      res.send("Producto eliminado correctamente")
+  })  
+};

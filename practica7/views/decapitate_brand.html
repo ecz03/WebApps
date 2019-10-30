@@ -30,27 +30,26 @@
             <th>URL</th>
           </tr>
         </thead>
-        <tr class="w3-hover-amber w3-text-black ">
-          <td>Jill</td>
-          <td>Smith</td>
-          <td>50</td>
-          <td>100</td>
+        <%carros.forEach((carro)=>{%>
+        <tr class="w3-hover-amber w3-text-black">
+          <td><%=carro["marca"]%></td>
+          <td><%=carro["establecimiento"]%></td>
+          <td><%=carro["origen"]%></td>
+          <td><a href="<%=carro["url"]%>"><%=carro["url"]%></a></td>
         </tr>
+        <%});%>
       </table>
     </div>
     
     <br>
-        <form class="w3-container" action="eliminar" method="POST" >
+        <form class="w3-container" method="POST" action="/practica7/Eliminar?_method=DELETE">
           <label class="w3-text-red"><b>Eliminar:</b></label>
+          <input type="hidden" name="_method" value="DELETE">
           <input class="w3-input w3-border w3-light-grey" type="text" name="marca" placeholder="Nombre de la marca">
           <br>
           <button class="w3-btn  w3-round-xxlarge w3-indigo">Eliminar</button>
          </form>
     <br>
-    
-    <div class="w3-container">
-      <a href="/" class="w3-btn w3-round-xxlarge w3-indigo">Regresar al menú principal</a>
-    </div>
     <hr>
     <p align="center" style="color:rgba(0, 250, 255, 0.35)"><font size='1'>Desarrollo de aplicaciones web</font></p>
     </body>

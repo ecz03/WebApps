@@ -1,3 +1,10 @@
+/*----------------------------------------------------------
+ * Práctica 7: MVC APP 
+ * Fecha: 29-Oct-2019
+ * Autores:
+ *            A01372581 Marcos Eduardo Castañeda Guzmán
+ *            A01169052 Ernestro Cruz López
+ *----------------------------------------------------------*/
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 

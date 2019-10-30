@@ -1,4 +1,10 @@
-//pridcuto en cada una re las rutas
+/*----------------------------------------------------------
+ * Práctica 7: MVC APP 
+ * Fecha: 29-Oct-2019
+ * Autores:
+ *            A01372581 Marcos Eduardo Castañeda Guzmán
+ *            A01169052 Ernestro Cruz López
+ *----------------------------------------------------------*/
 var bodyParser=require("body-parser"); 
 
 const CarBrand = require("../models/car_brands");
@@ -22,9 +28,14 @@ exports.registrarBrand = (req,res) => {
         }
         );
         car_brand.save((err)=>{
-            if (err) throw err;
-            //res.send("Producto creado exitosamente")
-            res.send(req.body.marca)
+            var estado = 0
+            if (err){
+                estado = 1;
+                res.render(path.join(__dirname+'/../views/maybe.html'),{estado:estado});
+                throw err;
+            }
+            console.log(estado)
+            res.render(path.join(__dirname+'/../views/maybe.html'),{estado:estado});
         });
 }
 
@@ -36,24 +47,51 @@ exports.consultarBrand = (req,res) => {
     CarBrand.findOne({marca:req.params.marca},{"_id":0,"marca":1,"establecimiento":1,"origen":1,"url":1},(err,brand_car)=>{
         if (err) throw err
         console.log(brand_car)
-        //res.render("/home/ec2-user/environment/practica7/views/show_brand.html",{carros:brand_car});
         res.render(path.join(__dirname+'/../views/show_brand.html'),{carros:brand_car});
     })
     
 };
 
+exports.oneToKillBrand = (req,res) => {
+    CarBrand.find({},{"_id":0,"marca":1,"establecimiento":1,"origen":1,"url":1},(err,brand_car)=>{
+        if (err) throw err
+        console.log(brand_car)
+        res.render(path.join(__dirname+'/../views/decapitate_brand.html'),{carros:brand_car});
+    })
+    
+};
+
+exports.oneToUpdateBrand = (req,res) => {
+    CarBrand.find({},{"_id":0,"marca":1,"establecimiento":1,"origen":1,"url":1},(err,brand_car)=>{
+        if (err) throw err
+        console.log(brand_car)
+        res.render(path.join(__dirname+'/../views/modify_brand.html'),{carros:brand_car});
+    })
+};
 exports.actualizarBrand = (req,res) => {
     var filter = {marca:req.body.marca}
     var update = {establecimiento:req.body.establecimiento,origen:req.body.origen,url:req.body.url}
     CarBrand.findOneAndUpdate(filter,update,{new:true},(err,producto)=>{
-        if (err) throw err
-        res.send('Producto Actualizado')
+        var estado = 0
+        if (err){
+            estado = 1;
+            res.render(path.join(__dirname+'/../views/maybe.html'),{estado:estado});
+            throw err;
+        }
+        console.log(estado)
+        res.render(path.join(__dirname+'/../views/maybe.html'),{estado:estado});
     })
 };
 
 exports.eliminarBrand = (req,res) => {
   CarBrand.findOneAndRemove({marca:req.body.marca},(err)=>{
-      if (err) throw err;
-      res.send("Producto eliminado correctamente")
+      var estado = 0
+      if (err){
+            estado = 1;
+            res.render(path.join(__dirname+'/../views/maybe.html'),{estado:estado});
+            throw err;
+        }
+        console.log(estado)
+        res.render(path.join(__dirname+'/../views/maybe.html'),{estado:estado});
   })  
 };

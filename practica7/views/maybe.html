@@ -13,7 +13,6 @@
                     margin-bottom: -14px;
                     overflow: hidden;
                     background-image: linear-gradient(to right, rgba(0, 191, 255, 0), rgba(0, 191, 255, 0.75), rgba(0, 191, 255, 0));
-                    border-bottom: 1px
                 }
         </style>
     </head>
@@ -21,21 +20,21 @@
         <%
         	if (estado == 0){
                     %>
-                    <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp Éxito</h1>
-                    <p>&nbsp&nbsp&nbsp Los datos han sido almacenados exitosamente :DDD</p>
+                    <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp; Éxito</h1>
+                    <p>&nbsp;&nbsp;&nbsp; Los datos han sido almacenados exitosamente :DDD</p>
                     <%
                     	} else if (estado == 1){
                     %>
-                    <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp Error</h1>
-                    <p>&nbsp&nbsp&nbsp Los datos NO se han almacenado exitosamente DDD:</p>
+                    <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp; Error</h1>
+                    <p>&nbsp;&nbsp;&nbsp; Los datos NO se han almacenado exitosamente DDD:</p>
                     <%
             }
         %>
         
-        <form class="w3-container">
-            <button class="w3-btn  w3-round-xxlarge w3-indigo"><a href='/practica7' target="_blank">Regresar al menú principal</a></button>
-        </form>
+        <div class="w3-container">
+            <a class="w3-btn  w3-round-xxlarge w3-indigo" href='/practica7' target="_blank">Regresar al menú principal</a>
+        </div>
         <hr>
-        <p align="center" style="color:rgba(0, 250, 255, 0.35)"><font size='1'>Desarrollo de aplicaciones web</font></p>
+        <p style="color:rgba(0, 250, 255, 0.35); text-align: center; font-size: 12px;">Desarrollo de aplicaciones web</p>
     </body>
 </html>

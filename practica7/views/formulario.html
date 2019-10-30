@@ -13,27 +13,24 @@
                     margin-bottom: -14px;
                     overflow: hidden;
                     background-image: linear-gradient(to right, rgba(0, 191, 255, 0), rgba(0, 191, 255, 0.75), rgba(0, 191, 255, 0));
-                    border-bottom: 1px
                 }
         </style>
     </head>
     <body class = "w3-dark-grey">
-        <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp Buscar Marca</h1>
+        <h1 class="w3-text-aqua" style="font-weight:bold">&nbsp; Buscar Marca</h1>
         <br>
         <div class="w3-container w3-teal">
-          <p>&nbsp&nbsp&nbsp<b>Instrucciones:</b>&nbsp Ingresa los datos que se piden a continuación.</p>
+          <p>&nbsp;&nbsp;&nbsp;<b>Instrucciones:</b>&nbsp; Ingresa los datos que se piden a continuación.</p>
         </div>
         <br>
-        <!--<form class="w3-container" action="/practica7/:marca/Consulta" method="GET" > -->
           <label class="w3-text-red"><b>Marca:</b></label>
           <input class="w3-input w3-border w3-light-grey" type="text" id="marca" name="marca" placeholder="Nombre de la marca">
           <br>
           <button onClick = "get_marca()" value="Consultar" class="w3-btn  w3-round-xxlarge w3-indigo">Consultar</button>
-        <!--</form>-->
         <hr>
-        <p align="center" style="color:rgba(0, 250, 255, 0.35)"><font size='1'>Desarrollo de aplicaciones web</font></p>
+        <p style="color:rgba(0, 250, 255, 0.35); text-align: center; font-size: 12px;">Desarrollo de aplicaciones web</p>
         
-        <script type="text/javascript">
+        <script>
             function get_marca() {
               var marca = document.getElementById("marca").value;
               location.href = "/practica7/"+marca+"/Consulta";

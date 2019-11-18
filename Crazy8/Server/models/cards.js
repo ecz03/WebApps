@@ -8,6 +8,6 @@ var CartaSchema = new Schema(
         palo : {type:String},
         valor :{type:Number},
         puntaje: {type:Number}
-    },{colleccion:'cartas'});
+    },{collection:'cartas'});
 
 module.exports= mongoose.model('Carta',CartaSchema)

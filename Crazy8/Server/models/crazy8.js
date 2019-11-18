@@ -6,7 +6,7 @@ var CrazySchema = new Schema({
    jugadores : [{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Jugador'},
                 nombre:{type:String},
-                id_juagdor:{type:Number}
+                id_jugador:{type:Number}
         }],
    cartas:[{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Carta'},
@@ -19,6 +19,6 @@ var CrazySchema = new Schema({
                 valor:{type:Number}
         },
    turno : {type:Number},
-},{collection:'theCrazy8'});
+},{collection:'theCrazy88'});
 
 module.exports= mongoose.model('Crazy',CrazySchema)

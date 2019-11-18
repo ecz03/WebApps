@@ -9,13 +9,34 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console,'Error en la conexión'));
 db.once('open',()=>{
     console.log('Conexión exitosa');
-    var ascor = new Carta({
+    var cartaNueva = new Carta({
         _id:new mongoose.Types.ObjectId(),
         id_carta:2,
         palo:"corazones",
         valor:1,
         puntaje:1
     });
+    
+    var jugadorNuevo = new Jugador({
+        _id:new mongoose.Types.ObjectId(),
+        id:1,
+        nombre:"Netuki",
+        cartas:[{}]
+    });
+    
+    var juegoNuevo = new Crazy({
+        juego:1,
+        jugadores:[{}],
+        cartas:[{}],
+        cartaActual:{},
+        turno:1
+    });
+    
+    juegoNuevo.save((err)=>{
+        db.close();
+    });
+    
+    /*
     
     var diezpicas = new Carta({
         _id:new mongoose.Types.ObjectId(),
@@ -42,7 +63,6 @@ db.once('open',()=>{
         db.close();
     });
     
-    })
-    
+    })*/
     
 });

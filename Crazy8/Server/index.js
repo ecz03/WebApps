@@ -3,7 +3,7 @@ const cards = require("./routes/cards")
 var app = express()
 //configuracion mongoose
 const mongoose = require("mongoose")
-const db_url = 'mongodb://localhost/dbCrazy8'
+const db_url = 'mongodb://localhost/theCrazy88'
 
 mongoose.connect(db_url,{userNewUrlParser:true,
 useUnifiedTopology:true

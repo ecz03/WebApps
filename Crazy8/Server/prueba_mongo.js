@@ -32,9 +32,14 @@ db.once('open',()=>{
         turno:1
     });
     
-    juegoNuevo.save((err)=>{
-        db.close();
+    juegoNuevo.save(()=>{
+        Crazy.find({juego: 1}, (err, resultado)=>{
+            if (err) throw err;
+            console.log(resultado);
+        });
     });
+    
+    
     
     /*
     

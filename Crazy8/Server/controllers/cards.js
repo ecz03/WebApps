@@ -88,9 +88,19 @@ exports.nuevoJuego = (req, res)=>{
                 Crazy.updateOne({juego:req.params.idJuego},{$addToSet:{jugadores:jugadorNuevo}},(err, succ)=>{
                     if (err) throw err;
                     console.log(succ);
-                    db.close();
-                    res.send("ABCDE");
-                })
+                    Crazy.find({juego:req.params.idJuego},(err,succ)=>{
+                        if (err) throw err;
+                        var cartaPull = succ[0].cartas[12];
+                        Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.0.cartas':cartaPull}},(err, succ)=>{
+                            if (err) throw err;
+                            Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:{id_carta:13}}},(err, succ)=>{
+                                if (err) throw err;
+                                db.close();
+                                res.send("Procesado");
+                            });
+                        });
+                    });
+                });
             });
         });
     });

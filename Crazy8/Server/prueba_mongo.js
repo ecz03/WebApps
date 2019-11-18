@@ -29,7 +29,8 @@ db.once('open',()=>{
         jugadores:[],
         cartas:[],
         cartaActual:{},
-        turno:1
+        turno:1,
+        estado:"en curso"
     });
     
     juegoNuevo.save(()=>{

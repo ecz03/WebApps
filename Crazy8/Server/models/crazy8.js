@@ -30,6 +30,7 @@ var CrazySchema = new Schema({
                 puntaje:{type:Number}
         },
    turno : {type:Number},
+   estado: {type:String}
 },{collection:'theCrazy88'});
 
 module.exports= mongoose.model('Crazy',CrazySchema)

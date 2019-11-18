@@ -37,10 +37,15 @@ db.once('open',()=>{
             if (err) throw err;
             console.log('Turno: ',resultado[0].turno);
         }).then(()=>{
-            Crazy.updateOne({juego:1},{$push:{jugadores:jugadorNuevo}},(err,succ)=>{
+            Crazy.updateOne({juego:1},{$addToSet:{jugadores:jugadorNuevo}},(err,succ)=>{
                 if (err) console.log(err);
                 console.log(succ);
-                db.close();
+            }).then(()=>{
+                Crazy.updateOne({juego:1, 'jugadores.id_jugador':1},{$addToSet:{'jugadores.0.cartas':cartaNueva}},(err,succ)=>{
+                    if (err) console.log(err);
+                    console.log(succ);
+                    db.close();
+                });
             });
             console.log("Fin");
         });

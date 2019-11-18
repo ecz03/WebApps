@@ -5,18 +5,29 @@ var CrazySchema = new Schema({
    juego : {type:Number},
    jugadores : [{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Jugador'},
+                id_jugador:{type:Number},
                 nombre:{type:String},
-                id_jugador:{type:Number}
+                cartas:[{
+                    _id:{type:mongoose.Schema.Types.ObjectId,ref: 'Carta'},
+                    id_carta:{type:Number},
+                    palo:{type:String},
+                    valor:{type:Number},
+                    puntaje:{type:Number}
+                }]
         }],
    cartas:[{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Carta'},
+                id_carta:{type:Number},
                 palo:{type:String},
-                valor:{type:Number}
+                valor:{type:Number},
+                puntaje:{type:Number}
         }],
    cartaActual :{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Carta'},
+                id_carta:{type:Number},
                 palo:{type:String},
-                valor:{type:Number}
+                valor:{type:Number},
+                puntaje:{type:Number}
         },
    turno : {type:Number},
 },{collection:'theCrazy88'});

@@ -19,15 +19,15 @@ db.once('open',()=>{
     
     var jugadorNuevo = new Jugador({
         _id:new mongoose.Types.ObjectId(),
-        id:1,
+        id_jugador:1,
         nombre:"Netuki",
-        cartas:[{}]
+        cartas:[]
     });
     
     var juegoNuevo = new Crazy({
         juego:1,
-        jugadores:[{}],
-        cartas:[{}],
+        jugadores:[],
+        cartas:[],
         cartaActual:{},
         turno:1
     });
@@ -35,39 +35,15 @@ db.once('open',()=>{
     juegoNuevo.save(()=>{
         Crazy.find({juego: 1}, (err, resultado)=>{
             if (err) throw err;
-            console.log(resultado);
+            console.log('Turno: ',resultado[0].turno);
+        }).then(()=>{
+            Crazy.updateOne({juego:1},{$push:{jugadores:jugadorNuevo}},(err,succ)=>{
+                if (err) console.log(err);
+                console.log(succ);
+                db.close();
+            });
+            console.log("Fin");
         });
     });
-    
-    
-    
-    /*
-    
-    var diezpicas = new Carta({
-        _id:new mongoose.Types.ObjectId(),
-        id_carta:10,
-        palo:"picas",
-        valor:10,
-        puntaje:1
-    });
-    
-    diezpicas.save()
-    
-    ascor.save((err)=>{
-        if (err) throw err;
-        var jugador = new Jugador({
-        _id:new mongoose.Types.ObjectId(),
-        id:1,
-        nombre:"Netuki",
-        cartas:[{_id:ascor._id,palo:ascor.palo,valor:ascor.valor},
-                {_id:diezpicas._id,palo:diezpicas.palo,valor:diezpicas.valor}]
-    });
-    
-    jugador.save((err)=>{
-        if (err) throw err;
-        db.close();
-    });
-    
-    })*/
     
 });

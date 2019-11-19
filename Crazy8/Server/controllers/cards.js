@@ -17,7 +17,8 @@ exports.nuevoJuego = (req, res)=>{
             cartas:[],
             cartaActual:{},
             turno:1,
-            estado:"inicializando"
+            estado:"inicializando",
+            paloOcho:""
         });
         
         var num_jugadores = req.body.num_jugadores  //obtener por POST

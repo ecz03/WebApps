@@ -263,7 +263,15 @@ exports.tirarCarta = (req,res)=>{
                     res.send("No se puede tirar");
                 }
             } else if (req.body.accion == 'definirPalo'){
-                
+                if (juego.estado == 'ochoActual'){
+                    var nuevoPaloOcho = req.body.paloNuevo;
+                    var nuevoEstado = 'ochoAnterior';
+                    var nuevoTurno = (juego.turno%4)+1;
+                    Crazy.updateOne({juego:req.params.idJuego},{$set:{paloOcho:nuevoPaloOcho, estado:nuevoEstado, turno:nuevoTurno}},(err, succ)=>{
+                        if (err) throw err;
+                        res.send("Palo actualizado a " + nuevoPaloOcho);
+                    });
+                }
             }
             
             //Acción: Definir palo si tiró un ocho

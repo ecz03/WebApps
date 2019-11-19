@@ -17,7 +17,7 @@ exports.nuevoJuego = (req, res)=>{
             cartas:[],
             cartaActual:{},
             turno:1,
-            estado:"inicializando",
+            estado:"en juego",
             paloOcho:""
         });
         
@@ -148,12 +148,79 @@ exports.Odin = (req,res)=>{
 
 exports.tirarCarta = (req,res)=>{
     var turno = 0
+    
+    //El turno es del jugador
     Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
         if (err) throw err
         turno = juego.turno
         if (turno.toString() == req.params.idJugador){
-            res.send("VAAAAAS PERROOOOOOO")
-        }else
+            //Acción: Tirar
+            //Se espera que tire y no que escoja un palo
+            //La carta que indica sí está en la mano del jugador
+            //Validar la carta (palo == palo o valor == valor o valor == 8 o antes se tiró un ocho y palo == paloOcho)
+            //Quitar de mano y poner carta activa
+            //Revisar si todavía tiene cartas. Si no, ganó
+            //Si es ocho, no pasar turno, actualizar estado
+            //Si no es ocho, pasar turno
+            
+            if (req.body.accion == 'tirar'){
+                if (juego.estado == 'en juego' || juego.estado == 'ochoAnterior'){
+                    var tieneLaCarta = false;
+                    var valorCarta = 0;
+                    var paloCarta = "";
+                    juego.jugadores[req.params.idJugador-1].cartas.forEach((carta)=>{
+                        if (carta.id_carta == req.body.id_carta){
+                            tieneLaCarta = true;
+                            valorCarta = carta.valor;
+                            paloCarta = carta.palo;
+                        }
+                    });
+                    if (tieneLaCarta){
+                        var cartaValida = false;
+                        if (juego.estado == 'en juego'){
+                            if (paloCarta == juego.cartaActual.palo || valorCarta == juego.cartaActual.valor || valorCarta == 8){
+                                cartaValida = true;
+                            }
+                        } else if (juego.estado == 'ochoAnterior'){
+                            if (paloCarta == juego.paloOcho || valorCarta == 8){
+                                cartaValida = true;
+                            }
+                        }
+                        if (cartaValida){
+                            if (juego.jugadores[req.params.idJugador-1].cartas.length - 1 <= 0){ //Si se acaban las cartas, ganó
+                                var nuevoEstado = 'finalizado';
+                                //TODO: Actualizar cartas y estado
+                                res.send("Ganador");
+                            } else {
+                                if (valorCarta == 8){
+                                    var nuevoEstado = 'ochoActual';
+                                    //TODO: Actualizar cartas y estado
+                                    res.send("Se jugó un 8");
+                                } else {
+                                    var nuevoEstado = 'en juego';
+                                    //TODO: Actualizar cartas, estado, paloOcho y turno
+                                    res.send("Cambio de turno");
+                                }
+                            }
+                        } else {
+                            res.send("Carta inválida");
+                        }
+                    } else {
+                        res.send("La carta enviada no está en la mano");
+                    }
+                } else {
+                    res.send("No se puede tirar");
+                }
+            } else if (req.body.accion == 'definirPalo'){
+                
+            }
+            
+            //Acción: Definir palo si tiró un ocho
+            //Validar si tiró un ocho antes
+            //Actualizar palo esperado
+            //Pasar turno
+            
+        }else //El turno no es del jugador
         {
             res.send("CALMANTES MONTES!!!!")
         }

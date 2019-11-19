@@ -20,12 +20,9 @@ exports.nuevoJuego = (req, res)=>{
             estado:"inicializando"
         });
         
-        var jugadorNuevo = new Jugador({
-            _id:new mongoose.Types.ObjectId(),
-            id_jugador:req.params.idJugador,
-            nombre:"Jugador " + req.params.idJugador,
-            cartas:[]
-        });
+        var num_jugadores = 4  //obtener por POST
+        var jugadorcitos = []
+        var baraja = []
         
         var new_baraja = [{_id:new mongoose.Types.ObjectId(),id_carta:1,palo:"picas",valor:1,puntaje:1},
             {_id:new mongoose.Types.ObjectId(),id_carta:2,palo:"picas",valor:2,puntaje:1},
@@ -79,34 +76,41 @@ exports.nuevoJuego = (req, res)=>{
             {_id:new mongoose.Types.ObjectId(),id_carta:50,palo:"diamantes",valor:11,puntaje:1},
             {_id:new mongoose.Types.ObjectId(),id_carta:51,palo:"diamantes",valor:12,puntaje:1},
             {_id:new mongoose.Types.ObjectId(),id_carta:52,palo:"diamantes",valor:13,puntaje:1}
-            
             ]
         
         new_baraja.sort(function(a,b){return 0.5 - Math.random()})
         
-        var baraja = []
+        for (var jugador = 0; jugador<num_jugadores;jugador++){
+            
+             var mis_cartas = []
+             var cartas_jugador = 5
+             for (var carta=0; carta<cartas_jugador;carta++){
+                 mis_cartas.push(new Carta(new_baraja.pop()))
+             }
+             
+             var jugadorNuevo = new Jugador({
+                _id:new mongoose.Types.ObjectId(),
+                id_jugador:jugador+1,
+                nombre:"Jugador " + (jugador+1),
+                cartas:mis_cartas
+            });
+            
+            jugadorcitos.push(jugadorNuevo)
+        }
         
         new_baraja.forEach(carta => baraja.push(new Carta(carta)))
+        
+       
         
         juegoNuevo.save(()=>{
             Crazy.updateOne({juego:req.params.idJuego},{$addToSet:{cartas:baraja}},(err,succ)=>{
                 if (err) throw err;
                 console.log(succ);
-                Crazy.updateOne({juego:req.params.idJuego},{$addToSet:{jugadores:jugadorNuevo}},(err, succ)=>{
+                Crazy.updateOne({juego:req.params.idJuego},{$set:{jugadores:jugadorcitos}},(err, succ)=>{
                     if (err) throw err;
                     console.log(succ);
-                    Crazy.find({juego:req.params.idJuego},(err,succ)=>{
-                        if (err) throw err;
-                        var cartaPull = succ[0].cartas[12];
-                        Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.0.cartas':cartaPull}},(err, succ)=>{
-                            if (err) throw err;
-                            Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:{id_carta:13}}},(err, succ)=>{
-                                if (err) throw err;
-                                db.close();
-                                res.send("Procesado");
-                            });
-                        });
-                    });
+                    db.close();
+                    res.send("Procesado");
                 });
             });
         });

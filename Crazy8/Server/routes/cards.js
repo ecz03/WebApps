@@ -8,6 +8,6 @@ const router = express.Router();
 
 const controladorCrazy = require("../controllers/cards");
 
-router.get('/:idJuego/:idJugador', controladorCrazy.nuevoJuego);
+router.post('/nuevo', controladorCrazy.nuevoJuego);
 
 module.exports = router;

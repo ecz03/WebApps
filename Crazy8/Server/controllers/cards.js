@@ -10,9 +10,9 @@ exports.nuevoJuego = (req, res)=>{
     db.on('error', console.error.bind(console,'Error en la conexión'));
     
     db.once('open',()=>{
-        console.log(req.params);
+        console.log(req.body);
         var juegoNuevo = new Crazy({
-            juego:req.params.idJuego,
+            juego:req.body.idJuego,
             jugadores:[],
             cartas:[],
             cartaActual:{},
@@ -20,7 +20,7 @@ exports.nuevoJuego = (req, res)=>{
             estado:"inicializando"
         });
         
-        var num_jugadores = 4  //obtener por POST
+        var num_jugadores = req.body.num_jugadores  //obtener por POST
         var jugadorcitos = []
         var baraja = []
         
@@ -103,10 +103,10 @@ exports.nuevoJuego = (req, res)=>{
        
         
         juegoNuevo.save(()=>{
-            Crazy.updateOne({juego:req.params.idJuego},{$addToSet:{cartas:baraja}},(err,succ)=>{
+            Crazy.updateOne({juego:req.body.idJuego},{$addToSet:{cartas:baraja}},(err,succ)=>{
                 if (err) throw err;
                 console.log(succ);
-                Crazy.updateOne({juego:req.params.idJuego},{$set:{jugadores:jugadorcitos}},(err, succ)=>{
+                Crazy.updateOne({juego:req.body.idJuego},{$set:{jugadores:jugadorcitos}},(err, succ)=>{
                     if (err) throw err;
                     console.log(succ);
                     db.close();

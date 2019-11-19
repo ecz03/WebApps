@@ -78,8 +78,10 @@ exports.nuevoJuego = (req, res)=>{
             {_id:new mongoose.Types.ObjectId(),id_carta:52,palo:"diamantes",valor:13,puntaje:1}
             ]
         
+        //Revolver baraja
         new_baraja.sort(function(a,b){return 0.5 - Math.random()})
         
+        //Crear jugadores con sus cartas iniciales
         for (var jugador = 0; jugador<num_jugadores;jugador++){
             
              var mis_cartas = []
@@ -98,9 +100,18 @@ exports.nuevoJuego = (req, res)=>{
             jugadorcitos.push(jugadorNuevo)
         }
         
-        new_baraja.forEach(carta => baraja.push(new Carta(carta)))
+        //Elegir carta inicial. No puede valer 8
+        var cartaInicial;
+        do {
+            cartaInicial = new_baraja.pop();
+            if (cartaInicial.valor == 8){
+                new_baraja.shift(cartaInicial);
+            }
+        } while (cartaInicial.valor == 8);
+        juegoNuevo.cartaActual = new Carta(cartaInicial);
         
-       
+        //Poner cartas restantes en pila con esquema de Mongo
+        new_baraja.forEach(carta => baraja.push(new Carta(carta)))
         
         juegoNuevo.save(()=>{
             Crazy.updateOne({juego:req.body.idJuego},{$addToSet:{cartas:baraja}},(err,succ)=>{

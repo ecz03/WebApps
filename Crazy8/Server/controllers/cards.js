@@ -187,19 +187,33 @@ exports.tirarCarta = (req,res)=>{
                             }
                         }
                         if (cartaValida){
+                            var nuevoEstado;
+                            var nuevoPaloOcho;
+                            var nuevoTurno;
                             if (juego.jugadores[req.params.idJugador-1].cartas.length - 1 <= 0){ //Si se acaban las cartas, ganó
-                                var nuevoEstado = 'finalizado';
+                                nuevoEstado = 'finalizado';
+                                nuevoPaloOcho = '';
+                                nuevoTurno = juego.turno;
+                                
                                 //TODO: Actualizar cartas y estado
+                                
                                 res.send("Ganador");
                             } else {
                                 if (valorCarta == 8){
-                                    var nuevoEstado = 'ochoActual';
+                                    nuevoEstado = 'ochoActual';
+                                    nuevoPaloOcho = '';
+                                    nuevoTurno = juego.turno;
+                                    
                                     //TODO: Actualizar cartas y estado
+                                    
+                                    
                                     res.send("Se jugó un 8");
                                 } else {
-                                    var nuevoEstado = 'en juego';
+                                    nuevoEstado = 'en juego';
+                                    nuevoPaloOcho = '';
+                                    nuevoTurno = (juego.turno%4)+1;
                                     //TODO: Actualizar cartas, estado, paloOcho y turno
-                                    res.send("Cambio de turno");
+                                    res.send("Cambio de turno: Jugador " + nuevoTurno);
                                 }
                             }
                         } else {
@@ -218,6 +232,7 @@ exports.tirarCarta = (req,res)=>{
             //Acción: Definir palo si tiró un ocho
             //Validar si tiró un ocho antes
             //Actualizar palo esperado
+            //Actualizar estado
             //Pasar turno
             
         }else //El turno no es del jugador

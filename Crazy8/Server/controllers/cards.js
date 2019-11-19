@@ -293,7 +293,16 @@ exports.tirarCarta = (req,res)=>{
 }
 
 exports.pasar = (req, res)=>{
-    
+    Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
+        if (err) throw err
+        if(juego.cartas.length == 0 && juego.turno.toString()==req.params.idJugador){
+           var nuevoTurno = (juego.turno%4)+1;
+           Crazy.updateOne({juego:req.params.idJuego},{$set:{turno:nuevoTurno}},(err, succ)=>{
+                        if (err) throw err;
+                        res.send("Turno de " + nuevoTurno);
+           });
+        }
+    })
 };
 
 exports.tomarCarta = (req, res)=>{

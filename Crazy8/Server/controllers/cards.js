@@ -271,7 +271,11 @@ exports.tirarCarta = (req,res)=>{
                         if (err) throw err;
                         res.send("Palo actualizado a " + nuevoPaloOcho);
                     });
+                } else {
+                    res.send("No se puede actualizar el palo");
                 }
+            } else {
+                res.send("Acción inválida");
             }
             
             //Acción: Definir palo si tiró un ocho
@@ -286,4 +290,12 @@ exports.tirarCarta = (req,res)=>{
         }
     })
     
-} 
+}
+
+exports.pasar = (req, res)=>{
+    
+};
+
+exports.tomarCarta = (req, res)=>{
+    
+};

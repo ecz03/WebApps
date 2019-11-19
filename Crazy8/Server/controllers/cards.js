@@ -199,24 +199,45 @@ exports.tirarCarta = (req,res)=>{
                                 nuevoTurno = juego.turno;
                                 
                                 //TODO: Actualizar cartas y estado
+                                var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
+                                Crazy.updateOne({juego:req.params.idJuego},{$set:{cartaActual:cartaPull}},(err, succ)=>{
+                                    if (err) throw err;
+                                    Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                                        if (err) throw err;
+                                        Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
+                                            if (err) throw err;
+                                            res.send("Ganador");
+                                        });
+                                    });
+                                });
                                 
-                                res.send("Ganador");
+                                
                             } else {
                                 if (valorCarta == 8){
                                     nuevoEstado = 'ochoActual';
                                     nuevoPaloOcho = '';
                                     nuevoTurno = juego.turno;
                                     
-                                    //TODO: Actualizar cartas y estado
+                                    //Actualizar cartas y estado
+                                    var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
+                                    Crazy.updateOne({juego:req.params.idJuego},{$set:{cartaActual:cartaPull}},(err, succ)=>{
+                                        if (err) throw err;
+                                        Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                                            if (err) throw err;
+                                            Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
+                                                if (err) throw err;
+                                                res.send("Se jugó un 8");
+                                            });
+                                        });
+                                    });
                                     
                                     
-                                    res.send("Se jugó un 8");
                                 } else {
                                     nuevoEstado = 'en juego';
                                     nuevoPaloOcho = '';
                                     nuevoTurno = (juego.turno%4)+1;
                                     
-                                    //TODO: Actualizar cartas, estado, paloOcho y turno
+                                    //Actualizar cartas, estado, paloOcho y turno
                                     var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
                                     console.log("cartaPull:",cartaPull);
                                     Crazy.updateOne({juego:req.params.idJuego},{$set:{cartaActual:cartaPull}},(err, succ)=>{

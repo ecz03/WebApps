@@ -126,3 +126,25 @@ exports.manoJugador = (req,res)=>{
         res.send(juego.jugadores[req.params.idJugador-1].cartas);
     })
 } 
+
+exports.Odin = (req,res)=>{
+    Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
+        if (err) throw err
+        res.send(juego);
+    })
+} 
+
+exports.tirarCarta = (req,res)=>{
+    var turno = 0
+    Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
+        if (err) throw err
+        turno = juego.turno
+        if (turno.toString() == req.params.idJugador){
+            res.send("VAAAAAS PERROOOOOOO")
+        }else
+        {
+            res.send("CALMANTES MONTES!!!!")
+        }
+    })
+    
+} 

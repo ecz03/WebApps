@@ -306,5 +306,19 @@ exports.pasar = (req, res)=>{
 };
 
 exports.tomarCarta = (req, res)=>{
-    
+    Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
+        if (err) throw err
+       if(juego.cartas.length > 0 && juego.turno.toString()==req.params.idJugador) {
+            var cartaPull = juego.cartas[0];
+            console.log("cartaPull:",cartaPull);
+            Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                if (err) throw err;
+                Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:cartaPull}},(err, succ)=>{
+                    if (err) throw err;
+                    res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII')
+                });
+            });
+           
+       }
+    });
 };

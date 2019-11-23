@@ -136,7 +136,7 @@ exports.manoJugador = (req,res)=>{
             paloOcho:juego.paloOcho,
             estado:juego.estado
         };
-        res.send(datos);
+        res.json(datos);
     })
 } 
 
@@ -195,7 +195,7 @@ exports.tirarCarta = (req,res)=>{
                             var nuevoPaloOcho;
                             var nuevoTurno;
                             if (juego.jugadores[req.params.idJugador-1].cartas.length - 1 <= 0){ //Si se acaban las cartas, ganó
-                                nuevoEstado = 'finalizado';
+                                nuevoEstado = 'finalizado0';
                                 nuevoPaloOcho = '';
                                 nuevoTurno = juego.turno;
                                 
@@ -227,6 +227,9 @@ exports.tirarCarta = (req,res)=>{
                                             if (err) throw err;
                                             Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
                                                 if (err) throw err;
+                                                
+                                                //No revisar fin de juego aquí. Mejor después de elegir el nuevo palo
+                                                
                                                 res.send("Se jugó un 8");
                                             });
                                         });
@@ -247,7 +250,28 @@ exports.tirarCarta = (req,res)=>{
                                             if (err) throw err;
                                             Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
                                                 if (err) throw err;
-                                                res.send("Cambio de turno: Jugador " + nuevoTurno);
+                                                
+                                                //Revisar si el juego acaba por falta de posibilidades
+                                                Crazy.findOne({juego:req.params.idJuego},(err,juegoActual)=>{
+                                                    if (err) throw err;
+                                                    if (juegoActual.cartas.length == 0){
+                                                        var disponibles = false;
+                                                        juegoActual.jugadores.forEach((jugador)=>{
+                                                            jugador.cartas.forEach((carta)=>{
+                                                                if ((juegoActual.estado == 'en juego' && (carta.palo == juegoActual.cartaActual.palo || carta.valor == juegoActual.cartaActual.valor || carta.valor == 8)) || (juegoActual.estado == 'ochoAnterior' && (carta.valor == 8 || carta.palo == juegoActual.paloOcho))){
+                                                                    disponibles = true;
+                                                                }
+                                                            });
+                                                        });
+                                                        if (disponibles){
+                                                            res.send("Cambio de turno: Jugador " + nuevoTurno);
+                                                        } else {
+                                                            res.send("Fin del juego. No hay cartas utilizables");
+                                                        }
+                                                    } else {
+                                                        res.send("Cambio de turno: Jugador " + nuevoTurno);
+                                                    }
+                                                });
                                             });
                                         });
                                     });
@@ -270,7 +294,28 @@ exports.tirarCarta = (req,res)=>{
                     var nuevoTurno = (juego.turno%juego.jugadores.length)+1;
                     Crazy.updateOne({juego:req.params.idJuego},{$set:{paloOcho:nuevoPaloOcho, estado:nuevoEstado, turno:nuevoTurno}},(err, succ)=>{
                         if (err) throw err;
-                        res.send("Palo actualizado a " + nuevoPaloOcho);
+                        
+                        //Revisar si el juego acaba por falta de posibilidades
+                        Crazy.findOne({juego:req.params.idJuego},(err,juegoActual)=>{
+                            if (err) throw err;
+                            if (juegoActual.cartas.length == 0){
+                                var disponibles = false;
+                                juegoActual.jugadores.forEach((jugador)=>{
+                                    jugador.cartas.forEach((carta)=>{
+                                        if ((juegoActual.estado == 'en juego' && (carta.palo == juegoActual.cartaActual.palo || carta.valor == juegoActual.cartaActual.valor || carta.valor == 8)) || (juegoActual.estado == 'ochoAnterior' && (carta.valor == 8 || carta.palo == juegoActual.paloOcho))){
+                                            disponibles = true;
+                                        }
+                                    });
+                                });
+                                if (disponibles){
+                                    res.send("Palo actualizado a " + nuevoPaloOcho);
+                                } else {
+                                    res.send("Fin del juego. No hay cartas utilizables");
+                                }
+                            } else {
+                                res.send("Palo actualizado a " + nuevoPaloOcho);
+                            }
+                        });
                     });
                 } else {
                     res.send("No se puede actualizar el palo");
@@ -297,14 +342,18 @@ exports.pasar = (req, res)=>{
     Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
         if (err) throw err;
         if(juego.turno.toString()==req.params.idJugador){
-            if (juego.cartas.length == 0){
-               var nuevoTurno = (juego.turno%juego.jugadores.length)+1;
-               Crazy.updateOne({juego:req.params.idJuego},{$set:{turno:nuevoTurno}},(err, succ)=>{
-                            if (err) throw err;
-                            res.send("Turno del jugador " + nuevoTurno);
-               });
+            if (juego.estado == 'en juego' || juego.estado == 'ochoAnterior'){
+                if (juego.cartas.length == 0){
+                   var nuevoTurno = (juego.turno%juego.jugadores.length)+1;
+                   Crazy.updateOne({juego:req.params.idJuego},{$set:{turno:nuevoTurno}},(err, succ)=>{
+                                if (err) throw err;
+                                res.send("Turno del jugador " + nuevoTurno);
+                   });
+                } else {
+                    res.send("Todavía quedan cartas en la pila");
+                }
             } else {
-                res.send("Todavía quedan cartas en la pila");
+                res.send("No se puede pasar ahora");
             }
         } else {
             res.send("No es tu turno");
@@ -316,18 +365,43 @@ exports.tomarCarta = (req, res)=>{
     Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
         if (err) throw err
         if (juego.turno.toString() == req.params.idJugador){
-            if (juego.cartas.length > 0){
-                var cartaPull = juego.cartas[0];
-                console.log("cartaPull:",cartaPull);
-                Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
-                    if (err) throw err;
-                    Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:cartaPull}},(err, succ)=>{
+            if (juego.estado == 'en juego' || juego.estado == 'ochoAnterior'){
+                if (juego.cartas.length > 0){
+                    var cartaPull = juego.cartas[0];
+                    console.log("cartaPull:",cartaPull);
+                    Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
                         if (err) throw err;
-                        res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII');
+                        Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:cartaPull}},(err, succ)=>{
+                            if (err) throw err;
+                            
+                            //Revisar si el juego acaba por falta de posibilidades
+                            Crazy.findOne({juego:req.params.idJuego},(err,juegoActual)=>{
+                                if (err) throw err;
+                                if (juegoActual.cartas.length == 0){
+                                    var disponibles = false;
+                                    juegoActual.jugadores.forEach((jugador)=>{
+                                        jugador.cartas.forEach((carta)=>{
+                                            if ((juegoActual.estado == 'en juego' && (carta.palo == juegoActual.cartaActual.palo || carta.valor == juegoActual.cartaActual.valor || carta.valor == 8)) || (juegoActual.estado == 'ochoAnterior' && (carta.valor == 8 || carta.palo == juegoActual.paloOcho))){
+                                                disponibles = true;
+                                            }
+                                        });
+                                    });
+                                    if (disponibles){
+                                        res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII');
+                                    } else {
+                                        res.send("Fin del juego. No hay cartas utilizables");
+                                    }
+                                } else {
+                                    res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII');
+                                }
+                            });
+                        });
                     });
-                });
+                } else {
+                    res.send("Ya no hay cartas en la pila");
+                }
             } else {
-                res.send("Ya no hay cartas en la pila");
+                res.send("No se puede tomar una carta ahora");
             }
         } else {
             res.send("No es tu turno");

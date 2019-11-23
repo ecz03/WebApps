@@ -235,7 +235,7 @@ exports.tirarCarta = (req,res)=>{
                                 } else {
                                     nuevoEstado = 'en juego';
                                     nuevoPaloOcho = '';
-                                    nuevoTurno = (juego.turno%4)+1;
+                                    nuevoTurno = (juego.turno%juego.jugadores.length)+1;
                                     
                                     //Actualizar cartas, estado, paloOcho y turno
                                     var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
@@ -266,7 +266,7 @@ exports.tirarCarta = (req,res)=>{
                 if (juego.estado == 'ochoActual'){
                     var nuevoPaloOcho = req.body.paloNuevo;
                     var nuevoEstado = 'ochoAnterior';
-                    var nuevoTurno = (juego.turno%4)+1;
+                    var nuevoTurno = (juego.turno%juego.jugadores.length)+1;
                     Crazy.updateOne({juego:req.params.idJuego},{$set:{paloOcho:nuevoPaloOcho, estado:nuevoEstado, turno:nuevoTurno}},(err, succ)=>{
                         if (err) throw err;
                         res.send("Palo actualizado a " + nuevoPaloOcho);
@@ -294,13 +294,19 @@ exports.tirarCarta = (req,res)=>{
 
 exports.pasar = (req, res)=>{
     Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
-        if (err) throw err
-        if(juego.cartas.length == 0 && juego.turno.toString()==req.params.idJugador){
-           var nuevoTurno = (juego.turno%4)+1;
-           Crazy.updateOne({juego:req.params.idJuego},{$set:{turno:nuevoTurno}},(err, succ)=>{
-                        if (err) throw err;
-                        res.send("Turno de " + nuevoTurno);
-           });
+        if (err) throw err;
+        if(juego.turno.toString()==req.params.idJugador){
+            if (juego.cartas.length == 0){
+               var nuevoTurno = (juego.turno%juego.jugadores.length)+1;
+               Crazy.updateOne({juego:req.params.idJuego},{$set:{turno:nuevoTurno}},(err, succ)=>{
+                            if (err) throw err;
+                            res.send("Turno del jugador " + nuevoTurno);
+               });
+            } else {
+                res.send("Todavía quedan cartas en la pila");
+            }
+        } else {
+            res.send("No es tu turno");
         }
     })
 };
@@ -308,17 +314,22 @@ exports.pasar = (req, res)=>{
 exports.tomarCarta = (req, res)=>{
     Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
         if (err) throw err
-       if(juego.cartas.length > 0 && juego.turno.toString()==req.params.idJugador) {
-            var cartaPull = juego.cartas[0];
-            console.log("cartaPull:",cartaPull);
-            Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
-                if (err) throw err;
-                Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:cartaPull}},(err, succ)=>{
+        if (juego.turno.toString() == req.params.idJugador){
+            if (juego.cartas.length > 0){
+                var cartaPull = juego.cartas[0];
+                console.log("cartaPull:",cartaPull);
+                Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
                     if (err) throw err;
-                    res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII')
+                    Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:cartaPull}},(err, succ)=>{
+                        if (err) throw err;
+                        res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII');
+                    });
                 });
-            });
-           
-       }
+            } else {
+                res.send("Ya no hay cartas en la pila");
+            }
+        } else {
+            res.send("No es tu turno");
+        }
     });
 };

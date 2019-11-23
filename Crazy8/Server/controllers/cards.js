@@ -129,7 +129,14 @@ exports.nuevoJuego = (req, res)=>{
 exports.manoJugador = (req,res)=>{
     Crazy.findOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},(err,juego)=>{
         if (err) throw err
-        res.send(juego.jugadores[req.params.idJugador-1].cartas);
+        var datos = {
+            cartas:juego.jugadores[req.params.idJugador-1].cartas,
+            turno:juego.turno,
+            cartaActual:juego.cartaActual,
+            paloOcho:juego.paloOcho,
+            estado:juego.estado
+        };
+        res.send(datos);
     })
 } 
 

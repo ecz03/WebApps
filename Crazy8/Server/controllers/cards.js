@@ -266,7 +266,10 @@ exports.tirarCarta = (req,res)=>{
                                                         if (disponibles){
                                                             res.send("Cambio de turno: Jugador " + nuevoTurno);
                                                         } else {
-                                                            res.send("Fin del juego. No hay cartas utilizables");
+                                                            Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:'finalizado1'}},(err, succ)=>{
+                                                                if (err) throw err;
+                                                                res.send("Fin del juego. No hay cartas utilizables");
+                                                            });
                                                         }
                                                     } else {
                                                         res.send("Cambio de turno: Jugador " + nuevoTurno);
@@ -310,7 +313,10 @@ exports.tirarCarta = (req,res)=>{
                                 if (disponibles){
                                     res.send("Palo actualizado a " + nuevoPaloOcho);
                                 } else {
-                                    res.send("Fin del juego. No hay cartas utilizables");
+                                    Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:'finalizado1'}},(err, succ)=>{
+                                        if (err) throw err;
+                                        res.send("Fin del juego. No hay cartas utilizables");
+                                    });
                                 }
                             } else {
                                 res.send("Palo actualizado a " + nuevoPaloOcho);
@@ -389,7 +395,10 @@ exports.tomarCarta = (req, res)=>{
                                     if (disponibles){
                                         res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII');
                                     } else {
-                                        res.send("Fin del juego. No hay cartas utilizables");
+                                        Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:'finalizado1'}},(err, succ)=>{
+                                            if (err) throw err;
+                                            res.send("Fin del juego. No hay cartas utilizables");
+                                        });
                                     }
                                 } else {
                                     res.send('YASTAS CERVIDO PAPIIIIII/MAMIIIIII');

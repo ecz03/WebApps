@@ -129,6 +129,12 @@ exports.nuevoJuego = (req, res)=>{
 exports.manoJugador = (req,res)=>{
     Crazy.findOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},(err,juego)=>{
         if (err) throw err
+        var numCartas = [];
+        juego.jugadores.forEach((jugador)=>{
+            var nombreJugador = jugador.nombre;
+            var numero = jugador.cartasJugador.length
+            numCartas.push({nombre:nombreJugador,numeroCartas:numero})
+        });
         var datos = {
             cartasJugador:juego.jugadores[req.params.idJugador-1].cartasJugador,
             turno:juego.turno,
@@ -136,8 +142,8 @@ exports.manoJugador = (req,res)=>{
             paloOcho:juego.paloOcho,
             estado:juego.estado,
             id_jugador:req.params.idJugador,
-            tamanioBaraja:juego.cartasGlobal.length
-            
+            tamanioBaraja:juego.cartasGlobal.length,
+            cartasXJugador:numCartas
         };
         res.json(datos);
     })

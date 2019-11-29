@@ -20,6 +20,8 @@ exports.obtenerJugadores = (req, res) => {
     res.json(returning);
 }
 
+
+
 exports.nombrarJugador = (req, res) => {
     var idJuego = req.body.idJuego;
     var nombre = req.body.nombre;
@@ -32,7 +34,9 @@ exports.nombrarJugador = (req, res) => {
         gamePlayers.get(idJuego)[1] = jugador;
         nombresJugadores.get(idJuego).set(jugador, nombre);
         res.json({
-            "num_jugador": jugador 
+            "num_jugador": jugador,
+            "total_jugadores": gamePlayers.get(idJuego)[0],
+            "conectados": gamePlayers.get(idJuego)[1]
         });    
     } else {
         res.send("JuegoLleno");

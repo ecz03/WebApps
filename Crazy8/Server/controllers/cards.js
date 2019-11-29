@@ -135,7 +135,9 @@ exports.manoJugador = (req,res)=>{
             cartaActual:juego.cartaActual,
             paloOcho:juego.paloOcho,
             estado:juego.estado,
-            id_jugador:req.params.idJugador
+            id_jugador:req.params.idJugador,
+            tamanioBaraja:juego.cartasGlobal.length
+            
         };
         res.json(datos);
     })

@@ -7,7 +7,7 @@ var CrazySchema = new Schema({
                 ref: 'Jugador'},
                 id_jugador:{type:Number},
                 nombre:{type:String},
-                cartas:[{
+                cartasJugador:[{
                     _id:{type:mongoose.Schema.Types.ObjectId,ref: 'Carta'},
                     id_carta:{type:Number},
                     palo:{type:String},
@@ -15,7 +15,7 @@ var CrazySchema = new Schema({
                     puntaje:{type:Number}
                 }]
         }],
-   cartas:[{_id:{type: mongoose.Schema.Types.ObjectId,
+   cartasGlobal:[{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Carta'},
                 id_carta:{type:Number},
                 palo:{type:String},

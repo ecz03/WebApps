@@ -6,7 +6,7 @@ var JugadorSchema = new Schema(
         _id: mongoose.Schema.Types.ObjectId,
         id_jugador : {type:Number},
         nombre: {type:String},
-        cartas:[{_id:{type: mongoose.Schema.Types.ObjectId,
+        cartasJugador:[{_id:{type: mongoose.Schema.Types.ObjectId,
                 ref: 'Carta'},
                 id_carta:{type:Number},
                 palo:{type:String},

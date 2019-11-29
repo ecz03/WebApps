@@ -10,7 +10,7 @@ exports.nuevoJuego = (req, res)=>{
     var juegoNuevo = new Crazy({
         juego:req.body.idJuego,
         jugadores:[],
-        cartas:[],
+        cartasGlobal:[],
         cartaActual:{},
         turno:1,
         estado:"en juego",
@@ -91,7 +91,7 @@ exports.nuevoJuego = (req, res)=>{
             _id:new mongoose.Types.ObjectId(),
             id_jugador:jugador+1,
             nombre:"Jugador " + (jugador+1),
-            cartas:mis_cartas
+            cartasJugador:mis_cartas
         });
         
         jugadorcitos.push(jugadorNuevo)
@@ -111,7 +111,7 @@ exports.nuevoJuego = (req, res)=>{
     new_baraja.forEach(carta => baraja.push(new Carta(carta)))
     
     juegoNuevo.save(()=>{
-        Crazy.updateOne({juego:req.body.idJuego},{$addToSet:{cartas:baraja}},(err,succ)=>{
+        Crazy.updateOne({juego:req.body.idJuego},{$addToSet:{cartasGlobal:baraja}},(err,succ)=>{
             if (err) throw err;
             console.log(succ);
             Crazy.updateOne({juego:req.body.idJuego},{$set:{jugadores:jugadorcitos}},(err, succ)=>{
@@ -130,11 +130,12 @@ exports.manoJugador = (req,res)=>{
     Crazy.findOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},(err,juego)=>{
         if (err) throw err
         var datos = {
-            cartas:juego.jugadores[req.params.idJugador-1].cartas,
+            cartasJugador:juego.jugadores[req.params.idJugador-1].cartasJugador,
             turno:juego.turno,
             cartaActual:juego.cartaActual,
             paloOcho:juego.paloOcho,
-            estado:juego.estado
+            estado:juego.estado,
+            id_jugador:req.params.idJugador
         };
         res.json(datos);
     })
@@ -170,7 +171,7 @@ exports.tirarCarta = (req,res)=>{
                     var valorCarta = 0;
                     var paloCarta = "";
                     var indexCarta = -1;
-                    juego.jugadores[req.params.idJugador-1].cartas.forEach((carta, i)=>{
+                    juego.jugadores[req.params.idJugador-1].cartasJugador.forEach((carta, i)=>{
                         if (carta.id_carta == req.body.id_carta){
                             tieneLaCarta = true;
                             valorCarta = carta.valor;
@@ -194,16 +195,16 @@ exports.tirarCarta = (req,res)=>{
                             var nuevoEstado;
                             var nuevoPaloOcho;
                             var nuevoTurno;
-                            if (juego.jugadores[req.params.idJugador-1].cartas.length - 1 <= 0){ //Si se acaban las cartas, ganó
+                            if (juego.jugadores[req.params.idJugador-1].cartasJugador.length - 1 <= 0){ //Si se acaban las cartas, ganó
                                 nuevoEstado = 'finalizado0';
                                 nuevoPaloOcho = '';
                                 nuevoTurno = juego.turno;
                                 
                                 //TODO: Actualizar cartas y estado
-                                var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
+                                var cartaPull = juego.jugadores[req.params.idJugador-1].cartasJugador[indexCarta];
                                 Crazy.updateOne({juego:req.params.idJuego},{$set:{cartaActual:cartaPull}},(err, succ)=>{
                                     if (err) throw err;
-                                    Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                                    Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartasJugador':cartaPull}},(err, succ)=>{
                                         if (err) throw err;
                                         Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
                                             if (err) throw err;
@@ -220,10 +221,10 @@ exports.tirarCarta = (req,res)=>{
                                     nuevoTurno = juego.turno;
                                     
                                     //Actualizar cartas y estado
-                                    var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
+                                    var cartaPull = juego.jugadores[req.params.idJugador-1].cartasJugador[indexCarta];
                                     Crazy.updateOne({juego:req.params.idJuego},{$set:{cartaActual:cartaPull}},(err, succ)=>{
                                         if (err) throw err;
-                                        Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                                        Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartasJugador':cartaPull}},(err, succ)=>{
                                             if (err) throw err;
                                             Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
                                                 if (err) throw err;
@@ -242,11 +243,11 @@ exports.tirarCarta = (req,res)=>{
                                     nuevoTurno = (juego.turno%juego.jugadores.length)+1;
                                     
                                     //Actualizar cartas, estado, paloOcho y turno
-                                    var cartaPull = juego.jugadores[req.params.idJugador-1].cartas[indexCarta];
+                                    var cartaPull = juego.jugadores[req.params.idJugador-1].cartasJugador[indexCarta];
                                     console.log("cartaPull:",cartaPull);
                                     Crazy.updateOne({juego:req.params.idJuego},{$set:{cartaActual:cartaPull}},(err, succ)=>{
                                         if (err) throw err;
-                                        Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                                        Crazy.updateOne({juego:req.params.idJuego, 'jugadores.id_jugador':req.params.idJugador},{$pull:{'jugadores.$.cartasJugador':cartaPull}},(err, succ)=>{
                                             if (err) throw err;
                                             Crazy.updateOne({juego:req.params.idJuego},{$set:{estado:nuevoEstado, paloOcho:nuevoPaloOcho, turno:nuevoTurno}},(err, succ)=>{
                                                 if (err) throw err;
@@ -254,10 +255,10 @@ exports.tirarCarta = (req,res)=>{
                                                 //Revisar si el juego acaba por falta de posibilidades
                                                 Crazy.findOne({juego:req.params.idJuego},(err,juegoActual)=>{
                                                     if (err) throw err;
-                                                    if (juegoActual.cartas.length == 0){
+                                                    if (juegoActual.cartasGlobal.length == 0){
                                                         var disponibles = false;
                                                         juegoActual.jugadores.forEach((jugador)=>{
-                                                            jugador.cartas.forEach((carta)=>{
+                                                            jugador.cartasJugador.forEach((carta)=>{
                                                                 if ((juegoActual.estado == 'en juego' && (carta.palo == juegoActual.cartaActual.palo || carta.valor == juegoActual.cartaActual.valor || carta.valor == 8)) || (juegoActual.estado == 'ochoAnterior' && (carta.valor == 8 || carta.palo == juegoActual.paloOcho))){
                                                                     disponibles = true;
                                                                 }
@@ -301,10 +302,10 @@ exports.tirarCarta = (req,res)=>{
                         //Revisar si el juego acaba por falta de posibilidades
                         Crazy.findOne({juego:req.params.idJuego},(err,juegoActual)=>{
                             if (err) throw err;
-                            if (juegoActual.cartas.length == 0){
+                            if (juegoActual.cartasGlobal.length == 0){
                                 var disponibles = false;
                                 juegoActual.jugadores.forEach((jugador)=>{
-                                    jugador.cartas.forEach((carta)=>{
+                                    jugador.cartasJugador.forEach((carta)=>{
                                         if ((juegoActual.estado == 'en juego' && (carta.palo == juegoActual.cartaActual.palo || carta.valor == juegoActual.cartaActual.valor || carta.valor == 8)) || (juegoActual.estado == 'ochoAnterior' && (carta.valor == 8 || carta.palo == juegoActual.paloOcho))){
                                             disponibles = true;
                                         }
@@ -349,7 +350,7 @@ exports.pasar = (req, res)=>{
         if (err) throw err;
         if(juego.turno.toString()==req.params.idJugador){
             if (juego.estado == 'en juego' || juego.estado == 'ochoAnterior'){
-                if (juego.cartas.length == 0){
+                if (juego.cartasGlobal.length == 0){
                    var nuevoTurno = (juego.turno%juego.jugadores.length)+1;
                    Crazy.updateOne({juego:req.params.idJuego},{$set:{turno:nuevoTurno}},(err, succ)=>{
                                 if (err) throw err;
@@ -372,21 +373,21 @@ exports.tomarCarta = (req, res)=>{
         if (err) throw err
         if (juego.turno.toString() == req.params.idJugador){
             if (juego.estado == 'en juego' || juego.estado == 'ochoAnterior'){
-                if (juego.cartas.length > 0){
-                    var cartaPull = juego.cartas[0];
+                if (juego.cartasGlobal.length > 0){
+                    var cartaPull = juego.cartasGlobal[0];
                     console.log("cartaPull:",cartaPull);
-                    Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartas':cartaPull}},(err, succ)=>{
+                    Crazy.updateOne({juego:req.params.idJuego,'jugadores.id_jugador':req.params.idJugador},{$addToSet:{'jugadores.$.cartasJugador':cartaPull}},(err, succ)=>{
                         if (err) throw err;
-                        Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartas:cartaPull}},(err, succ)=>{
+                        Crazy.updateOne({juego:req.params.idJuego},{$pull:{cartasGlobal:cartaPull}},(err, succ)=>{
                             if (err) throw err;
                             
                             //Revisar si el juego acaba por falta de posibilidades
                             Crazy.findOne({juego:req.params.idJuego},(err,juegoActual)=>{
                                 if (err) throw err;
-                                if (juegoActual.cartas.length == 0){
+                                if (juegoActual.cartasGlobal.length == 0){
                                     var disponibles = false;
                                     juegoActual.jugadores.forEach((jugador)=>{
-                                        jugador.cartas.forEach((carta)=>{
+                                        jugador.cartasJugador.forEach((carta)=>{
                                             if ((juegoActual.estado == 'en juego' && (carta.palo == juegoActual.cartaActual.palo || carta.valor == juegoActual.cartaActual.valor || carta.valor == 8)) || (juegoActual.estado == 'ochoAnterior' && (carta.valor == 8 || carta.palo == juegoActual.paloOcho))){
                                                 disponibles = true;
                                             }

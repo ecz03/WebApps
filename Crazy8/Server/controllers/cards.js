@@ -14,14 +14,22 @@ exports.jugadores = (req, res) => {
 
 exports.nombrarJugador = (req, res) => {
     var idJuego = req.body.idJuego;
-    var jugador = req.body.jugador;
     var nombre = req.body.nombre;
     
     if (! nombresJugadores.has(idJuego)){
         nombresJugadores.set(idJuego, new Map());   
     }
-    nombresJugadores.get(idJuego).set(jugador, nombre);
-    res.send("OK");
+    if(gamePlayers.get(idJuego)[1] < gamePlayers.get(idJuego)[0]){
+        var jugador = gamePlayers.get(idJuego)[1] + 1;
+        gamePlayers.get(idJuego)[1] = jugador;
+        nombresJugadores.get(idJuego).set(jugador, nombre);
+        res.json({
+            "num_jugador": jugador 
+        });    
+    } else {
+        res.send("JuegoLleno");
+    }
+    
 }
 
 exports.nuevoJuego = (req, res)=>{
@@ -41,7 +49,8 @@ exports.nuevoJuego = (req, res)=>{
     var jugadorcitos = []
     var baraja = []
     
-    gamePlayers.set(req.body.idJuego, req.body.num_jugadores);
+    gamePlayers.set(req.body.idJuego, [req.body.num_jugadores, 0]);
+    nombresJugadores.set(req.body.idJuego, new Map());
     
     var new_baraja = [{_id:new mongoose.Types.ObjectId(),id_carta:1,palo:"picas",valor:1,puntaje:1},
         {_id:new mongoose.Types.ObjectId(),id_carta:2,palo:"picas",valor:2,puntaje:1},

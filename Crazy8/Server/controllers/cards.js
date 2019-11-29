@@ -7,9 +7,17 @@ const mongoose = require('mongoose');
 var nombresJugadores = new Map();
 var gamePlayers = new Map();
 
-exports.jugadores = (req, res) => {
+exports.obtenerJugadores = (req, res) => {
     var idJuego = req.body.idJuego;
-    res.send(nombresJugadores.get(idJuego));
+    console.log(idJuego);
+    console.log("Pidiendo Jugadores del juego");
+    var nombres = nombresJugadores.get(idJuego);
+    var returning = {};
+    nombres.forEach((key, value)=>{
+        returning[key] = value;
+    })
+    console.log(returning);
+    res.json(returning);
 }
 
 exports.nombrarJugador = (req, res) => {

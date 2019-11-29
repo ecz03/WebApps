@@ -14,5 +14,7 @@ router.get('/:idJuego',controladorCrazy.Odin);
 router.delete('/:idJuego/:idJugador', controladorCrazy.tirarCarta);
 router.post('/:idJuego/:idJugador', controladorCrazy.pasar);
 router.put('/:idJuego/:idJugador', controladorCrazy.tomarCarta);
+router.get('/:idJuego/players', controladorCrazy.jugadores);
+router.post('/:idJuego/players', controladorCrazy.nombrarJugador);
 
 module.exports = router;

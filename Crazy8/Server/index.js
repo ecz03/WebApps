@@ -19,6 +19,6 @@ db.on('error',
 console.error.bind(console,"Error en la conexion"));
 app.use(express.json());
 app.use('/',cards);
-app.listen(8080,()=>{
+app.listen(8000,()=>{
     console.log("Servidor corriendo");
 });

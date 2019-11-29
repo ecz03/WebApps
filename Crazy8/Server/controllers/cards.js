@@ -4,6 +4,26 @@ const Jugador = require('../models/player.js');
 const Crazy = require('../models/crazy8.js');
 const mongoose = require('mongoose');
 
+var nombresJugadores = new Map();
+var gamePlayers = new Map();
+
+exports.jugadores = (req, res) => {
+    var idJuego = req.body.idJuego;
+    res.send(nombresJugadores.get(idJuego));
+}
+
+exports.nombrarJugador = (req, res) => {
+    var idJuego = req.body.idJuego;
+    var jugador = req.body.jugador;
+    var nombre = req.body.nombre;
+    
+    if (! nombresJugadores.has(idJuego)){
+        nombresJugadores.set(idJuego, new Map());   
+    }
+    nombresJugadores.get(idJuego).set(jugador, nombre);
+    res.send("OK");
+}
+
 exports.nuevoJuego = (req, res)=>{
     
     console.log(req.body);
@@ -20,6 +40,8 @@ exports.nuevoJuego = (req, res)=>{
     var num_jugadores = req.body.num_jugadores  //obtener por POST
     var jugadorcitos = []
     var baraja = []
+    
+    gamePlayers.set(req.body.idJuego, req.body.num_jugadores);
     
     var new_baraja = [{_id:new mongoose.Types.ObjectId(),id_carta:1,palo:"picas",valor:1,puntaje:1},
         {_id:new mongoose.Types.ObjectId(),id_carta:2,palo:"picas",valor:2,puntaje:1},

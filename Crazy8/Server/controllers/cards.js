@@ -20,16 +20,39 @@ exports.obtenerJugadores = (req, res) => {
     res.json(returning);
 }
 
-
+exports.obtenerConectados = (req, res) => {
+    console.log("Headers");
+    console.log(req.headers);
+    
+    console.log("Players " )
+    console.log(gamePlayers)
+    var idJuego = parseInt(req.headers['id_juego']);
+    console.log("ID Juego: " + idJuego);
+    
+    if(gamePlayers.has(idJuego)){
+        res.json({
+            "total_jugadores": gamePlayers.get(idJuego)[0],
+            "conectados": gamePlayers.get(idJuego)[1]
+        });
+    } else {
+        console.log("Juego Inexistente")
+        res.send("JuegoInexistente");
+    }
+}
 
 exports.nombrarJugador = (req, res) => {
     var idJuego = req.body.idJuego;
     var nombre = req.body.nombre;
+    console.log("BOdy")
+    console.log(req.body)
+    console.log("idJuego: " + idJuego);
+    console.log("nombre: " + req.body.nombre)
     
     if (! nombresJugadores.has(idJuego)){
         nombresJugadores.set(idJuego, new Map());   
     }
-    if(gamePlayers.get(idJuego)[1] < gamePlayers.get(idJuego)[0]){
+    if(gamePlayers.has(idJuego)){
+        if(gamePlayers.get(idJuego)[1] < gamePlayers.get(idJuego)[0]){
         var jugador = gamePlayers.get(idJuego)[1] + 1;
         gamePlayers.get(idJuego)[1] = jugador;
         nombresJugadores.get(idJuego).set(jugador, nombre);
@@ -38,8 +61,11 @@ exports.nombrarJugador = (req, res) => {
             "total_jugadores": gamePlayers.get(idJuego)[0],
             "conectados": gamePlayers.get(idJuego)[1]
         });    
+        } else {
+            res.send("JuegoLleno");
+        }
     } else {
-        res.send("JuegoLleno");
+        res.send("JuegoInexistente");
     }
     
 }

@@ -8,6 +8,8 @@ const router = express.Router();
 
 const controladorCrazy = require("../controllers/cards");
 
+
+router.get('/playerCount', controladorCrazy.obtenerConectados);
 router.post('/players', controladorCrazy.nombrarJugador);
 router.get('/players', controladorCrazy.obtenerJugadores);
 router.post('/nuevo', controladorCrazy.nuevoJuego);

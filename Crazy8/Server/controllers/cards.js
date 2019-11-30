@@ -8,13 +8,13 @@ var nombresJugadores = new Map();
 var gamePlayers = new Map();
 
 exports.obtenerJugadores = (req, res) => {
-    var idJuego = req.body.idJuego;
-    console.log(idJuego);
+    var idJuego = parseInt(req.headers.idjuego);
+    console.log("Id juego: " + idJuego);
     console.log("Pidiendo Jugadores del juego");
     var nombres = nombresJugadores.get(idJuego);
     var returning = {};
     nombres.forEach((key, value)=>{
-        returning[key] = value;
+        returning[value] = key;
     })
     console.log(returning);
     res.json(returning);

@@ -227,7 +227,8 @@ exports.Odin = (req,res)=>{
 
 exports.tirarCarta = (req,res)=>{
     var turno = 0
-    
+    console.log("Tirar carta, request incoming")
+    console.log(req.body)
     //El turno es del jugador
     Crazy.findOne({juego:req.params.idJuego},(err,juego)=>{
         if (err) throw err

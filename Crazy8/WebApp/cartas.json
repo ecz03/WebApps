@@ -1,0 +1,122 @@
+{
+    "cartasJugador": [
+        {
+            "_id": "5de15278626be711cac6c227",
+            "id_carta": 45,
+            "palo": "diamantes",
+            "valor": 6,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c222",
+            "id_carta": 40,
+            "palo": "diamantes",
+            "valor": 1,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c218",
+            "id_carta": 30,
+            "palo": "treboles",
+            "valor": 4,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c206",
+            "id_carta": 12,
+            "palo": "picas",
+            "valor": 12,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c225",
+            "id_carta": 43,
+            "palo": "diamantes",
+            "valor": 4,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c225",
+            "id_carta": 1,
+            "palo": "diamantes",
+            "valor": 4,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c206",
+            "id_carta": 2,
+            "palo": "picas",
+            "valor": 12,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c222",
+            "id_carta": 3,
+            "palo": "diamantes",
+            "valor": 1,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c218",
+            "id_carta": 4,
+            "palo": "treboles",
+            "valor": 4,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c206",
+            "id_carta": 5,
+            "palo": "picas",
+            "valor": 12,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c225",
+            "id_carta": 6,
+            "palo": "diamantes",
+            "valor": 4,
+            "puntaje": 1
+        },
+        {
+            "_id": "5de15278626be711cac6c225",
+            "id_carta": 7,
+            "palo": "diamantes",
+            "valor": 4,
+            "puntaje": 1
+        }
+    ],
+    "turno": 1,
+    "cartaActual": {
+        "_id": "5de15278626be711cac6c217",
+        "id_carta": 29,
+        "palo": "treboles",
+        "valor": 3,
+        "puntaje": 1
+    },
+    "paloOcho": "",
+    "estado": "en juego",
+    "id_jugador": "1",
+    "tamanioBaraja": 26,
+    "cartasXJugador": [
+        {
+            "nombre": "Jugador 1",
+            "numeroCartas": 5
+        },
+        {
+            "nombre": "Jugador 2",
+            "numeroCartas": 5
+        },
+        {
+            "nombre": "Jugador 3",
+            "numeroCartas": 5
+        },
+        {
+            "nombre": "Jugador 4",
+            "numeroCartas": 5
+        },
+        {
+            "nombre": "Jugador 5",
+            "numeroCartas": 5
+        }
+    ]
+}
